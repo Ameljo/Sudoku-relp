@@ -24,7 +24,8 @@ public class SudokuSolver
     private int index;
     private int startColumn;
     private int start;
-    private int startRow;
+    private int startRow; 
+    private boolean safe; // True if values entered are valid.
     
     public SudokuSolver( List<javax.swing.JTextField> sudokuArray)
     {
@@ -38,6 +39,7 @@ public class SudokuSolver
         this.start = 1;
         this.startColumn = 0;
         this.startRow = 0;
+        this.safe = true;
     }
     
     private void setValue()
@@ -55,8 +57,17 @@ public class SudokuSolver
             }
             else
             {
+                //Kontrollon nese ka error gjate kthimit te sringut ne integer, qose a shkronje ka.
+                try
+                {
                 array[i][j] = Integer.parseInt(sudokuArray.get(indx).getText());
                 store [i][j] = Integer.parseInt(sudokuArray.get(indx).getText());
+                }
+                catch(NumberFormatException e)
+                {
+                    safe = false;
+                    break;
+                }
                 indx++;
             }
         }
@@ -65,7 +76,14 @@ public class SudokuSolver
     public void solve()
     {
         this.setValue();
-        while(!completed(array))
+        //Reset tan elementeve, s'kam koh me e ba ma te avancume, se ishte ba.
+        if (!safe)
+        {
+             for (int k = 0; k < sudokuArray.size() ;k++)
+                        sudokuArray.get(k).setText("");
+        }
+        //Shtojme kondite tjeter, hijme ne loop vetem qose asht safe.
+        while(!completed(array) && safe)
         {
             outerloop:
             {
@@ -136,7 +154,9 @@ public class SudokuSolver
                 startPoint.remove(index);
             }
         }
-        setText();
+        //Vetem qose asht safe, shfaqim text prej metodes te zgjidhjes.
+        if(safe)
+            setText();
     }
     
     public void setText()
