@@ -60,8 +60,17 @@ public class SudokuSolver
                 //Kontrollon nese ka error gjate kthimit te sringut ne integer, qose a shkronje ka.
                 try
                 {
-                array[i][j] = Integer.parseInt(sudokuArray.get(indx).getText());
-                store [i][j] = Integer.parseInt(sudokuArray.get(indx).getText());
+                int x = Integer.parseInt(sudokuArray.get(indx).getText());
+                if ( x > 0 && x <= 9)
+                {
+                    array[i][j] = x;
+                    store [i][j] = x;
+                }
+                else
+                {
+                    safe = false;
+                    break;
+                }
                 }
                 catch(NumberFormatException e)
                 {
